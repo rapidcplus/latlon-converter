@@ -1,0 +1,16 @@
+{
+  "name": "latlon-converter",
+  "version": "1.0.0",
+  "description": "A simple desktop app to convert decimal coordinates to sexagesimal. (Work In Progress) # latlon-converter",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron . --no-sandbox",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "electron": "^36.4.0"
+  }
+}

@@ -12,5 +12,8 @@ services:
       - /tmp/.X11-unix:/tmp/.X11-unix
     environment:
       - DISPLAY=host.docker.internal:0
+    network_mode: host
     working_dir: /app
     command: npm start
+    stdin_open: true # 追加
+    tty: true      # 追加
