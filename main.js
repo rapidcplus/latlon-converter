@@ -1,18 +1,23 @@
-// main.js
 const { app, BrowserWindow } = require('electron')
+const path = require('path')
 
 function createWindow () {
   const win = new BrowserWindow({
     width: 800,
     height: 600,
     webPreferences: {
-      nodeIntegration: true, // 必要に応じて設定
-      contextIsolation: false // 必要に応じて設定
+      nodeIntegration: false,    // セキュリティ向上
+      contextIsolation: true,    // セキュリティ向上
+      preload: path.join(__dirname, 'preload.js') // 追加推奨
     }
   })
 
-  // ここでHTMLファイルを読み込む (例: index.html)
   win.loadFile('index.html')
+  
+  // 開発時のみDevToolsを開く
+  if (process.env.NODE_ENV === 'development') {
+    win.webContents.openDevTools()
+  }
 }
 
 app.whenReady().then(createWindow)
