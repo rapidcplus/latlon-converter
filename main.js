@@ -2,34 +2,38 @@ const { app, BrowserWindow } = require('electron')
 const path = require('path')
 
 function createWindow () {
-  const win = new BrowserWindow({
+  const mainWindow = new BrowserWindow({
     width: 800,
     height: 600,
     webPreferences: {
-      nodeIntegration: false,    // セキュリティ向上
-      contextIsolation: true,    // セキュリティ向上
-      preload: path.join(__dirname, 'preload.js') // 追加推奨
-    }
+      preload: path.join(__dirname, 'preload.js'),
+      nodeIntegration: false,
+      contextIsolation: true
+    },
+    // 日本語フォント設定
+    webSecurity: false, // 開発時のみ
+    show: false // ウィンドウの準備ができてから表示
   })
 
-  win.loadFile('index.html')
-  
-  // 開発時のみDevToolsを開く
-  if (process.env.NODE_ENV === 'development') {
-    win.webContents.openDevTools()
-  }
+  // ウィンドウの準備ができたら表示
+  mainWindow.once('ready-to-show', () => {
+    mainWindow.show()
+  })
+
+  mainWindow.loadFile('index.html')
+
+  // 開発者ツールを開く（デバッグ用）
+  // mainWindow.webContents.openDevTools()
 }
 
-app.whenReady().then(createWindow)
+app.whenReady().then(() => {
+  createWindow()
 
-app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin') {
-    app.quit()
-  }
+  app.on('activate', function () {
+    if (BrowserWindow.getAllWindows().length === 0) createWindow()
+  })
 })
 
-app.on('activate', () => {
-  if (BrowserWindow.getAllWindows().length === 0) {
-    createWindow()
-  }
+app.on('window-all-closed', function () {
+  if (process.platform !== 'darwin') app.quit()
 })

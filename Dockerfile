@@ -1,7 +1,8 @@
 FROM node:18-bullseye
 
-# GUI表示に必要なパッケージをインストール
+# 日本語フォントと GUI表示に必要なパッケージをインストール
 RUN apt-get update && apt-get install -y \
+    dbus-x11 \
     libgtk-3-0 \
     libgbm-dev \
     libxss1 \
@@ -29,22 +30,34 @@ RUN apt-get update && apt-get install -y \
     lsb-release \
     xdg-utils \
     wget \
+    x11-utils \
+    fonts-noto-cjk \
+    fonts-noto-cjk-extra \
+    fonts-takao-gothic \
+    fonts-takao-mincho \
     && rm -rf /var/lib/apt/lists/*
+
+# フォントキャッシュを更新
+RUN fc-cache -fv
 
 WORKDIR /app
 
-# package.jsonをコピーして依存関係をインストール
 COPY package*.json ./
 RUN npm install
 
-# アプリケーションコードをコピー
 COPY . .
 
-# Electronを非rootユーザーで実行するための設定
+# DBusサービスを開始するスクリプトを作成
+RUN echo '#!/bin/bash\n\
+mkdir -p /run/dbus\n\
+dbus-daemon --config-file=/usr/share/dbus-1/system.conf --print-address\n\
+exec "$@"' > /entrypoint.sh && chmod +x /entrypoint.sh
+
 RUN groupadd -r electron && useradd -r -g electron -G audio,video electron \
     && mkdir -p /home/electron && chown -R electron:electron /home/electron \
     && chown -R electron:electron /app
 
 USER electron
 
+ENTRYPOINT ["/entrypoint.sh"]
 CMD ["npm", "start"]
