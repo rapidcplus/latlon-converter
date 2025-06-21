@@ -2,18 +2,20 @@ version: '3.8'
 
 services:
   app:
-    container_name: my-electron-app-dev
+    container_name: latlon-converter-dev
     build:
       context: .
       dockerfile: Dockerfile
     volumes:
       - .:/app
       - /app/node_modules
+      # Mac用のX11設定
       - /tmp/.X11-unix:/tmp/.X11-unix
     environment:
       - DISPLAY=host.docker.internal:0
+      - NODE_ENV=development
     network_mode: host
     working_dir: /app
     command: npm start
-    stdin_open: true # 追加
-    tty: true      # 追加
+    stdin_open: true
+    tty: true
