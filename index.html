@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
-  <title>緯度経度 10進法→60進法 変換</title>
+  <title>座標変換 10進法→60進法</title>
   <style>
     /* body全体の基本的なスタイル（任意） */
     body {
@@ -32,15 +32,16 @@
     /* --- ここからが間隔調整のCSS --- */
     h2 {
       margin-bottom: 5px; /* h2の下の余白を小さくする (デフォルトより詰める) */
-      /* margin-bottom: 0; */ /* もっと詰めたい場合は0にする */
     }
 
     #resultArea {
       margin-top: 0;      /* 結果表示エリアの上の余白をなくす */
     }
+    
+    /* 結果の各行の余白を最小限にする */
     #resultArea p {
-      margin-top: 5px;       /* 結果の各行の上の余白 */
-      margin-bottom: 5px;    /* 結果の各行の下の余白 */
+      margin-top: 2px;       /* 上の余白を最小に */
+      margin-bottom: 2px;    /* 下の余白を最小に */
     }
     /* --- ここまでが間隔調整のCSS --- */
 
@@ -48,7 +49,7 @@
 </head>
 <body>
 
-  <h1>10進法→60進法に変換</h1>
+  <h1>10進法から60進法に変換</h1>
 
   <div>
     <label for="latitudeInput">緯度(10進法):</label>
