@@ -1,40 +1,63 @@
-FROM node:20
+FROM node:18-bullseye
 
-# --- Electronの依存ライブラリをインストール ---
-# パッケージリストを更新し、必要なライブラリをインストール
-# (--no-install-recommends は推奨パッケージを除外して軽量化)
-RUN apt-get update && apt-get install -y --no-install-recommends \
+# 日本語フォントと GUI表示に必要なパッケージをインストール
+RUN apt-get update && apt-get install -y \
+    dbus-x11 \
     libgtk-3-0 \
-    libnotify4 \
-    libnss3 \
+    libgbm-dev \
+    libxss1 \
+    libasound2 \
+    libxtst6 \
+    libxrandr2 \
+    libasound2-dev \
+    libpangocairo-1.0-0 \
+    libatk1.0-0 \
+    libcairo-gobject2 \
+    libgtk-3-0 \
+    libgdk-pixbuf2.0-0 \
+    libxcomposite1 \
+    libxcursor1 \
+    libxdamage1 \
+    libxfixes3 \
+    libxi6 \
+    libxrender1 \
     libxss1 \
     libxtst6 \
+    ca-certificates \
+    fonts-liberation \
+    libappindicator1 \
+    libnss3 \
+    lsb-release \
     xdg-utils \
-    libatspi2.0-0 \
-    libuuid1 \
-    libsecret-1-0 \
-    libgbm1 \
-    libasound2 \
-    libglib2.0-0 \
-    # 不要になったキャッシュファイルを削除
+    wget \
+    x11-utils \
+    fonts-noto-cjk \
+    fonts-noto-cjk-extra \
+    fonts-takao-gothic \
+    fonts-takao-mincho \
     && rm -rf /var/lib/apt/lists/*
-# --- ここまで追加 ---
 
-# 2. アプリケーション用のディレクトリを作成・設定
+# フォントキャッシュを更新
+RUN fc-cache -fv
+
 WORKDIR /app
 
-# 3. 最初に package.json と lock ファイルをコピー (キャッシュを活用するため)
 COPY package*.json ./
+RUN npm install
 
-# 4. 依存関係をインストール
-# RUN npm install
-RUN npm ci 
-
-# 5. アプリケーションのソースコードをコピー
 COPY . .
 
-# 6. (オプション) アプリケーションが特定のポートを使う場合 (Webサーバー機能など)
-# EXPOSE 3000
+# DBusサービスを開始するスクリプトを作成
+RUN echo '#!/bin/bash\n\
+mkdir -p /run/dbus\n\
+dbus-daemon --config-file=/usr/share/dbus-1/system.conf --print-address\n\
+exec "$@"' > /entrypoint.sh && chmod +x /entrypoint.sh
 
-# 7. コンテナ起動時に実行するデフォルトコマンド
-CMD [ "npm", "start" ]
+RUN groupadd -r electron && useradd -r -g electron -G audio,video electron \
+    && mkdir -p /home/electron && chown -R electron:electron /home/electron \
+    && chown -R electron:electron /app
+
+USER electron
+
+ENTRYPOINT ["/entrypoint.sh"]
+CMD ["npm", "start"]

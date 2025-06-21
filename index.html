@@ -6,45 +6,65 @@
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
   <title>座標変換 10進法→60進法</title>
   <style>
-    /* body全体の基本的なスタイル（任意） */
+    /* body全体の基本的なスタイル（日本語フォント対応） */
     body {
-      font-family: sans-serif; /* フォントを指定 */
-      padding: 20px;         /* 内側の余白 */
+      font-family: 
+        "Hiragino Kaku Gothic ProN", 
+        "Hiragino Sans", 
+        "Yu Gothic Medium", 
+        "Meiryo", 
+        "Takao", 
+        "IPAexGothic", 
+        "IPAPGothic", 
+        "VL PGothic", 
+        "Noto Sans CJK JP", 
+        sans-serif;
+      padding: 20px;
+      -webkit-font-feature-settings: "palt";
+      font-feature-settings: "palt";
     }
 
-    /* 入力欄やラベルのスタイル（任意） */
+    /* 入力欄やラベルのスタイル */
     div {
-      margin-bottom: 10px; /* 各入力セクションの下に余白 */
+      margin-bottom: 10px;
     }
     label {
-      display: inline-block; /* ラベルと入力欄を横並びにするため */
-      width: 120px;        /* ラベルの幅を揃える */
+      display: inline-block;
+      width: 120px;
+      font-family: inherit; /* 親要素のフォントを継承 */
     }
     input[type="number"] {
-      width: 150px;        /* 入力欄の幅 */
-      padding: 5px;          /* 入力欄の内側の余白 */
+      width: 150px;
+      padding: 5px;
+      font-family: inherit; /* 親要素のフォントを継承 */
     }
     button {
-      padding: 8px 15px;     /* ボタンの余白 */
-      margin-top: 10px;      /* ボタンの上の余白 */
+      padding: 8px 15px;
+      margin-top: 10px;
+      font-family: inherit; /* 親要素のフォントを継承 */
     }
 
-    /* --- ここからが間隔調整のCSS --- */
-    h2 {
-      margin-bottom: 5px; /* h2の下の余白を小さくする (デフォルトより詰める) */
+    /* 見出しのフォント設定 */
+    h1, h2 {
+      font-family: inherit;
+      margin-bottom: 5px;
     }
 
     #resultArea {
-      margin-top: 0;      /* 結果表示エリアの上の余白をなくす */
+      margin-top: 0;
+      font-family: inherit; /* 親要素のフォントを継承 */
     }
     
-    /* 結果の各行の余白を最小限にする */
     #resultArea p {
-      margin-top: 2px;       /* 上の余白を最小に */
-      margin-bottom: 2px;    /* 下の余白を最小に */
+      margin-top: 2px;
+      margin-bottom: 2px;
+      font-family: inherit; /* 親要素のフォントを継承 */
     }
-    /* --- ここまでが間隔調整のCSS --- */
 
+    /* 全体的な文字エンコーディング対応 */
+    * {
+      font-family: inherit;
+    }
   </style>
 </head>
 <body>
@@ -70,7 +90,6 @@
     <p>経度(60進法): <span id="resultLongitude"></span></p>
   </div>
 
-  <!-- You can also require other files to run in this process -->
   <script src="./renderer.js"></script>
 </body>
 </html>

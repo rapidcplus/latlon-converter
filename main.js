@@ -1,30 +1,39 @@
-// main.js
 const { app, BrowserWindow } = require('electron')
+const path = require('path')
 
 function createWindow () {
-  const win = new BrowserWindow({
+  const mainWindow = new BrowserWindow({
     width: 800,
     height: 600,
     webPreferences: {
-      nodeIntegration: true, // 必要に応じて設定
-      contextIsolation: false // 必要に応じて設定
-    }
+      preload: path.join(__dirname, 'preload.js'),
+      nodeIntegration: false,
+      contextIsolation: true
+    },
+    // 日本語フォント設定
+    webSecurity: false, // 開発時のみ
+    show: false // ウィンドウの準備ができてから表示
   })
 
-  // ここでHTMLファイルを読み込む (例: index.html)
-  win.loadFile('index.html')
+  // ウィンドウの準備ができたら表示
+  mainWindow.once('ready-to-show', () => {
+    mainWindow.show()
+  })
+
+  mainWindow.loadFile('index.html')
+
+  // 開発者ツールを開く（デバッグ用）
+  // mainWindow.webContents.openDevTools()
 }
 
-app.whenReady().then(createWindow)
+app.whenReady().then(() => {
+  createWindow()
 
-app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin') {
-    app.quit()
-  }
+  app.on('activate', function () {
+    if (BrowserWindow.getAllWindows().length === 0) createWindow()
+  })
 })
 
-app.on('activate', () => {
-  if (BrowserWindow.getAllWindows().length === 0) {
-    createWindow()
-  }
+app.on('window-all-closed', function () {
+  if (process.platform !== 'darwin') app.quit()
 })
