@@ -32,3 +32,6 @@ Thumbs.db
 # Logs
 logs
 *.log
+dist/
+node_modules/
+.cache/
