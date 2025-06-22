@@ -5,12 +5,38 @@
   "main": "main.js",
   "scripts": {
     "start": "electron . --no-sandbox --disable-dev-shm-usage",
+    "build": "electron-builder",
+    "build-win": "electron-builder --win",
+    "dist": "electron-builder --publish=never",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "build": {
+    "appId": "com.yourname.latlon-converter",
+    "productName": "LatLon Converter",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "main.js",
+      "renderer.js",
+      "index.html",
+      "style.css",
+      "package.json"
+    ],
+    "win": {
+      "target": "nsis",
+      "icon": "icon.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
+    }
+  },
   "keywords": [],
-  "author": "",
+  "author": "Your Name",
   "license": "ISC",
   "devDependencies": {
-    "electron": "^36.4.0"
+    "electron": "^36.4.0",
+    "electron-builder": "^24.13.3"
   }
 }
