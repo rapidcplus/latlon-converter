@@ -9,6 +9,10 @@ jobs:
   build:
     runs-on: windows-latest
     
+    permissions: # GitHub Actionsがリポジトリに書き込み権限を持つために必要
+      contents: write
+      packages: write
+    
     steps:
     - uses: actions/checkout@v3
     
@@ -22,6 +26,8 @@ jobs:
       
     - name: Build application
       run: npm run build
+      env:  # electron-builderがGitHubリリースを作成するために必要
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       
     - name: Create Release
       uses: softprops/action-gh-release@v1
